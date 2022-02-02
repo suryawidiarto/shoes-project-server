@@ -6,7 +6,7 @@ const orderRouter = require("./routers/orderRouter");
 const productRouter = require("./routers/productRouter");
 const userRouter = require("./routers/userRouter");
 
-const port = process.env.PORT || 80;
+const port = process.env.MONGODB_PORT || 80;
 const app = express();
 
 app.use(cors());
@@ -25,7 +25,7 @@ const retryConnect = () => {
     .connect(`${process.env.MONGODB_URL}`)
     .then(() => {
       app.listen(port, () => {
-        console.log(`Server Connection Success || Running On Port ${port} || CORS Enabled`);
+        console.log(`Server Connection Success || Running Succesfully || CORS Enabled`);
       });
     })
     .catch((err) => {

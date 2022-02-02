@@ -58,7 +58,7 @@ exports.orderPostData = async (req, res, next) => {
       const productStock = product.stock[productIndexStock].inStock;
       const productStockCheck = productStock - item.productQty;
       product.stock[productIndexStock].inStock = productStockCheck;
-      product.save();
+      await product.save();
     });
 
     const newOrder = await order.save();

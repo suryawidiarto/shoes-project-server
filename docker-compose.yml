@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  shoes_project_redis:
+    container_name: shoes_project_redis
+    image: redis:6
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    networks:
+      - shoes_project_network
+
+  shoes_project_app:
+    container_name: shoes_project_app
+    build: .
+    volumes:
+      - ./:/app
+      - ./app/node_modules
+    ports:
+      - 2000:8080
+    depends_on:
+      - shoes_project_redis
+    networks:
+      - shoes_project_network
+      
+networks:
+  shoes_project_network:
+    name: shoes_project_network
+

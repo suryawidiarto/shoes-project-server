@@ -22,8 +22,8 @@ exports.userSignUp = async (req, res, next) => {
 
     const response = await User.save();
     res.status(201).json({ message: "SignUp Success", data: response });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error" });
   }
 };
@@ -45,8 +45,8 @@ exports.userSignIn = async (req, res, next) => {
     } else {
       res.status(404).json({ message: "SignIn Failed", error: "User Not Found" });
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error" });
   }
 };
@@ -68,8 +68,8 @@ exports.userGetProfile = async (req, res, next) => {
     } else {
       res.status(404).json({ message: "User Not Found" });
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error" });
   }
 };
@@ -103,8 +103,8 @@ exports.userUpdateProfile = async (req, res, next) => {
     } else {
       res.status(404).json({ message: "User Not Found" });
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error" });
   }
 };
@@ -113,10 +113,10 @@ exports.userPostCartItem = async (req, res, next) => {
   try {
     const User = await UserModel.findById(req.user._id);
     User.cartItems = req.body.cartItems;
-
-    User.save().then((response) => res.status(201).send(response));
-  } catch (error) {
-    console.log(error);
+    const response = await User.save();
+    res.status(201).send(response);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error" });
   }
 };
@@ -124,10 +124,9 @@ exports.userPostCartItem = async (req, res, next) => {
 exports.userGetCartItems = async (req, res, next) => {
   try {
     const User = await UserModel.findById(req.user._id);
-
     res.status(201).send(User.cartItems);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error" });
   }
 };

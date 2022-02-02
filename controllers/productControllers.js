@@ -7,7 +7,8 @@ const {
 const fs = require("fs");
 const { promisify } = require("util");
 const ProductModel = require("../models/productModel");
-const { GenerateIdentifier } = require("../security/identifier");
+const { GenerateIdentifier } = require("../utils/identifier");
+const { RedisCache } = require("../utils/redis");
 
 const unlinkAsync = promisify(fs.unlink);
 
@@ -170,14 +171,19 @@ exports.productUserGetAllData = async (req, res, next) => {
   try {
     const currentPage = parseInt(req.query.page) || 1;
     const itemPerPage = 8;
-    const totalItems = await ProductModel.find().countDocuments();
-    const skipData = (currentPage - 1) * itemPerPage;
 
-    const getData = await ProductModel.find().skip(skipData).limit(itemPerPage);
+    const data = await RedisCache(`homeProduct:${currentPage}`, 15, async () => {
+      const totalItems = await ProductModel.find().countDocuments();
+      const getData = await ProductModel.find()
+        .skip((currentPage - 1) * itemPerPage)
+        .limit(itemPerPage);
+
+      return { totalItems, getData };
+    });
 
     res.status(201).json({
-      items: getData,
-      totalItems: totalItems,
+      items: data.getData,
+      totalItems: data.totalItems,
       currentPage: currentPage,
       itemPerPage: itemPerPage,
     });
