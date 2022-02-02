@@ -6,7 +6,7 @@ const orderRouter = require("./routers/orderRouter");
 const productRouter = require("./routers/productRouter");
 const userRouter = require("./routers/userRouter");
 
-const port = process.env.MONGODB_PORT || 80;
+const port = process.env.PORT || 80;
 const app = express();
 
 app.use(cors());
